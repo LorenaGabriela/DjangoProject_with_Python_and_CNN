@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        {% load static %}
+
+        .upload-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            background-color: rgba(169, 169, 169, 0.8);
+        }
+
+        /* Stilizare pentru butoane și zona de încărcare */
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .loading-icon {
+            display: none; /* Inițial, ascundeți iconița de loading */
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        /* Stilizare pentru butoanele "Delete Photo" și "Submit" */
+        .action-btns {
+            margin-top: 20px;
+        }
+
+        .delete-btn, .submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-right: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #ff5252; /* Roșu */
+            color: white;
+        }
+
+        .submit-btn {
+            background-color: #4caf50; /* Verde */
+            color: white;
+        }
+        .uploaded-image {
+        margin-top: 20px; /* Spațiu între diagnostic și imagine */
+        text-align: center;
+    }
+
+    .uploaded-image img {
+        max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+    }
+
+
+    </style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Medical Website HomePage</title>
+</head>
+<body>
+<header>
+
+  <nav>
+    <a href="/">
+    <a style="font-family: Monospace, sans-serif; font-size: 40px; ">
+         Medica
+    </a>
+</a>
+        <div class="nav-links">
+
+            <ul>
+
+                <li>
+                    <a href="">Despre aplicatie</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="">Noutati</a>
+                </li>
+                <li>
+                    <a href="">Servicii</a>
+                </li>
+                <li>
+                    <a href="">Acasa</a>
+                </li>
+                <li>
+                    <a href="/pacienti">Inapoi</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <div class="text-box">
+<!--         upload_photo.html-->
+        <div class="upload-container">
+            {% if uploaded_file %}
+            <div id="preview-container" class="uploaded-image" style="display: none;">
+        <img id="preview-image" alt="Imagine încărcată">
+    </div>
+        {% endif %}
+
+<!--            asta functioneaza-->
+<form method="POST" enctype="multipart/form-data"action="{% if pacient %}{% url 'upload_mamografie_pacient' pacient.id %}{% endif %}" >
+    {% csrf_token %}
+    <input type="hidden" name="pacient.id" value="{{ pacient.id }}">
+    {{ form.as_p }}
+    <button type="submit" >Încarcă fișierul</button>
+
+
+{% if uploaded_file %}
+    <td class="Linethrough">{{uploaded_file}}</td>
+        {% endif %}
+
+<!--   <div class="upload-btn-wrapper">-->
+<!--        <button type="button" class="btn">Încărcați imaginea</button>-->
+<!--        <input type="file" name="file" accept="image/*" id="id_file" onchange="previewImage(event)">-->
+<!--    </div>-->
+<!--    <img id="preview" src="#" alt="Preview" style="display: none;">-->
+<!--    <div class="description-wrapper">-->
+<!--        <label for="id_description">Descriere:</label>-->
+<!--        <input type="text" name="description" id="id_description">-->
+<!--    </div>-->
+<!--    <button type="submit">Încarcă fișierul</button>-->
+
+</form>
+
+<!--            {% if pacient.mamografii.all %}-->
+<!--                {% for mamografie in pacient.mamografii.all %}-->
+<!--                    <tr>-->
+<!--                        <td colspan="7">-->
+<!--                            <img src="{{ mamografie.image.url }}" alt="Mamografie">-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                {% endfor %}-->
+<!--            {% endif %}-->
+
+
+
+
+
+</div>
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+ function previewImage(input) {
+        var previewContainer = document.getElementById('preview-container');
+        var previewImage = document.getElementById('preview-image');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+</body>
+</html>

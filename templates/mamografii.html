@@ -1,0 +1,74 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+
+   {% load static %}
+
+</style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+</head>
+<body>
+<header>
+
+
+    <nav>
+    <a href="/">
+    <a style="font-family: Monospace, sans-serif; font-size: 40px; ">
+         Medica
+    </a>
+</a>
+        <div class="nav-links">
+
+            <ul>
+
+                <li>
+                    <a href="">Despre aplicatie</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="">Noutati</a>
+                </li>
+                <li>
+                    <a href="">Servicii</a>
+                </li>
+                <li>
+                    <a href="/pacienti">Inapoi</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+   {% if mamografii %}
+        <ul>
+            {% for mamografie in mamografii %}
+                <li>
+                    <strong>Data mamografiei:</strong> {{ mamografie.data_mamografie }} <br>
+                    <!-- Aici puteți adăuga alte detalii despre mamografie -->
+                    <img src="{{ mamografie.file.url }}" alt="Mamografie">
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nu există mamografii disponibile pentru acest pacient.</p>
+    {% endif %}
+<h2>Încărcați o nouă mamografie:</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form_mamografii.as_p }}
+        <button type="submit">Încărcați mamografia</button>
+    </form>
+
+
+
+
+</html>

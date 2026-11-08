@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<style>
+
+
+   {% load static %}
+/* Setări generale pentru meniul de navigare */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    }
+
+.nav-brand {
+    font-family: Monospace, sans-serif;
+    font-size: 40px;
+    color: #fff; /* Text alb */
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-links a {
+    color: #fff; /* Link-uri albe */
+    text-decoration: none;
+    padding: 10px;
+}
+
+.nav-links a:hover {
+    color: #ddd; /* Culoare la hover */
+}
+
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff; /* Hamburger alb */
+}
+
+/* Setări pentru ecrane mici */
+@media screen and (max-width: 600px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* înălțimea headerului */
+        left: 0;
+        margin-top: 40px;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        width: 100%;
+                text-align: left;
+
+    }
+
+    .nav-links ul li {
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-active {
+        display: flex;
+    }
+    nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 70px 20px; /* Ajustează padding-ul pentru a muta elementele mai jos */
+    border-bottom: 1px solid #ddd; /* Linie de separare subtilă */
+}
+}
+</style>
+{% load pwa %}
+ {% progressive_web_app_meta %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+</head>
+<body>
+<header>
+
+
+    <nav>
+    <a href="/">
+    <a style="font-family: Monospace, sans-serif; font-size: 40px; display: inline-block; margin-top: 30px;">
+         Medica
+    </a>
+</a>
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+        <div class="nav-links">
+
+            <ul>
+
+                <li>
+                    <a href="">Despre aplicatie</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="">Noutati</a>
+                </li>
+                <li>
+                    <a href="">Servicii</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div class="text-box">
+        <h1>
+            Bine ai venit!
+        </h1>
+        <h2>
+                    <a href="/register_medic" class="hero-btn">Inregistrare</a>
+
+        </h2><h2>
+                <a href="/login_medic" class="hero-btn">Autentificare</a>
+
+    </h2>
+
+    </div>
+
+</header>
+<script>
+    function toggleMenu() {
+    var navLinks = document.querySelector('.nav-links');
+    navLinks.classList.toggle('nav-active');
+}
+</script>
+</body>
+
+</html>

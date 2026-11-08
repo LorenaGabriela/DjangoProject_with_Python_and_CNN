@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+   {% load static %}
+    .mamografii-table {
+        width: 100%;
+        overflow-x: auto; /* Adaugă scrollbar orizontal */
+        margin: 0 auto;
+    }
+
+    .mamografii-table {
+        display: flex;
+        justify-content: center; /* Centrează conținutul orizontal */
+        margin-top: 20px; /* Spațiu deasupra tabelului */
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 80%; /* Lățime a tabelului ajustabilă */
+        margin: 0 auto; /* Centrează tabelul */
+    }
+
+    .mamografii-table th,
+    .mamografii-table td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .mamografie-img {
+        max-width: 300px;
+        max-height: 200px;
+        cursor: pointer; /* Adaugă cursor pointer pentru a indica că imaginea este clicabilă */
+    }
+
+    .mamografie-img:hover {
+        opacity: 0.7; /* Scade opacitatea la hover pentru a indica că imaginea este interactivă */
+    }
+
+    /* Setări pentru ecrane mici */
+    @media screen and (max-width: 600px) {
+        .mamografie-img {
+            width: 128px;
+            height: 128px;
+            cursor: pointer; /* Adaugă cursor pointer pentru a indica că imaginea este clicabilă */
+        }
+    }
+
+    .mamografie-container {
+        text-align: center;
+    }
+</style>
+
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious@latest/dist/annotorious.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@recogito/annotorious@latest/dist/annotorious.min.css" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>HomePage</title>
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">
+            <a style="font-family: Monospace, sans-serif; font-size: 40px;">Medica</a>
+        </a>
+        <div class="nav-links">
+            <ul>
+                <li><a href="">Despre aplicatie</a></li>
+                <li><a href="">Contact</a></li>
+                <li><a href="">Noutati</a></li>
+                <li><a href="">Servicii</a></li>
+                <li><a href="/pacienti">Inapoi</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% if mamografii %}
+    <!-- Tabel cu scroll pentru mamografii -->
+    <div class="mamografii-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data ecografie</th>
+                    <th>Detalii</th>
+                    <th> Rezultat Segmentare</th>
+                    <th> Rezultat clasificare </th>
+                </tr>
+            </thead>
+            <tbody>{% for mamografie in mamografii %}
+    <tr>
+        <td>{{ mamografie.data_incarcare|date:"d-m-Y " }}</td>
+        <td>
+            <div class="mamografie-container" id="openseadragon-container-{{ mamografie.id }}">
+
+
+
+
+                <img class="mamografie-img" src="{{ mamografie.fisier.url }}" alt="Mamografie" width="200" height="128">
+            </div>
+        </td>
+        <td>
+
+
+            {% if mamografie.ecografie_segmentata %}
+            <img class="segmented-img" src="{{ mamografie.ecografie_segmentata.url }}" alt="Imagine segmentată" width="200" height="128">
+            {% else %}
+            <form action="{% url 'predict' pacient.id mamografie.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn" type="submit">Afla diagnosticul</button>
+                </form>
+            {% endif %}
+        </td>
+        <td>{% if mamografie.diagnostic %}
+                <div class="diagnostic">{{ mamografie.diagnostic }}</div>
+            {% else %}
+           <form action="{% url 'predict' pacient.id mamografie.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn" type="submit">Afla diagnosticul</button>
+                </form>
+                {% endif %}</td>
+    </tr>
+    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Nu există mamografii disponibile pentru acest pacient.</p>
+    {% endif %}
+</header>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon-annotorious/0.6.0/openseadragon-annotorious.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openseadragon-annotorious/0.6.0/openseadragon-annotorious.min.css">
+
+<script>
+ $(document).ready(function() {
+    var clickCount = 0; // Declarați un contor de clicuri
+
+    $('.mamografie-img').dblclick(function() {
+    // Deschideți imaginea cu FancyBox la dublu clic
+    $.fancybox.open({
+        src: $(this).attr('src'),
+        type: 'image'
+    });
+});
+
+$('.mamografie-img').dblclick(function() {
+    // Deschideți imaginea cu FancyBox la dublu clic
+    $.fancybox.open({
+        src: $(this).attr('src'),
+        type: 'image'
+    });
+
+    // Inițializați Annotorious pentru imaginea deschisă cu FancyBox
+    var img = $(this).get(0);
+    initializeAnnotorious(img);
+});
+
+// Funcție pentru inițializarea Annotorious
+function initializeAnnotorious(img) {
+    const anno = Annotorious.init({
+        image: img
+    });
+
+    // Eveniment pentru crearea adnotării
+    anno.on('createAnnotation', function(annotation) {
+        console.log('Annotation created:', annotation);
+        // Adăugați aici logica pentru salvarea adnotării
+    });
+
+    // Eveniment pentru actualizarea adnotării
+    anno.on('updateAnnotation', function(annotation, previous) {
+        console.log('Annotation updated:', annotation);
+        // Adăugați aici logica pentru actualizarea adnotării
+    });
+
+    // Eveniment pentru ștergerea adnotării
+    anno.on('deleteAnnotation', function(annotation) {
+        console.log('Annotation deleted:', annotation);
+        // Adăugați aici logica pentru ștergerea adnotării
+    });
+}
+
+});
+
+</script>
+
+</body>
+
+<link rel='stylesheet' id='fancybox-style-css' href='https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css?ver=81a38b5eb2a4df901367646a93448a94' type='text/css' media='all' />
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js?ver=3.3.5'></script>
+</html>

@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        {% load static %}
+.my-custom-class {
+    border: 5px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    width: 40%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+        .upload-container {
+            max-width: 500px;
+            height: 150px;
+            margin:auto;
+            margin-top: 100px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            background-color: rgba(169, 169, 169, 0.8);
+        }
+
+        /* Stilizare pentru butoane și zona de încărcare */
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .loading-icon {
+            display: none; /* Inițial, ascundeți iconița de loading */
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        /* Stilizare pentru butoanele "Delete Photo" și "Submit" */
+        .action-btns {
+            margin-top: 20px;
+        }
+
+        .delete-btn, .submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-right: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #ff5252; /* Roșu */
+            color: white;
+        }
+
+        .submit-btn {
+            background-color: #4caf50; /* Verde */
+            color: white;
+        }
+        .uploaded-image {
+        margin-top: 20px; /* Spațiu între diagnostic și imagine */
+        text-align: center;
+    }
+
+    .uploaded-image img {
+        max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff; /* Hamburger alb */
+}
+
+/* Setări pentru ecrane mici */
+@media screen and (max-width: 600px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* înălțimea headerului */
+        left: 0;
+        margin-top: 40px;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        width: 100%;
+                text-align: left;
+
+    }
+
+    .nav-links ul li {
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-active {
+        display: flex;
+    }
+    nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 70px 20px; /* Ajustează padding-ul pentru a muta elementele mai jos */
+    border-bottom: 1px solid #ddd; /* Linie de separare subtilă */
+}
+}
+
+
+
+    </style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Medical Website HomePage</title>
+</head>
+<body>
+<header>
+
+  <nav>
+    <a href="/">
+    <a style="font-family: Monospace, sans-serif; font-size: 40px; ">
+         Medica
+    </a>
+</a>        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+
+        <div class="nav-links">
+
+            <ul>
+
+                <li>
+                    <a href="">Despre aplicatie</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="">Noutati</a>
+                </li>
+                <li>
+                    <a href="">Servicii</a>
+                </li>
+                <li>
+                    <a href="">Acasa</a>
+                </li>
+                <li>
+                    <a href="/pacienti">Inapoi</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <div class="text-box">
+        <div class="upload-container">
+
+
+<form method="POST" enctype="multipart/form-data"action="{% if pacient %}{% url 'upload_mamografie_pacient1' pacient.id %}{% endif %}" >
+    {% csrf_token %}
+    <input type="hidden" name="pacient.id" value="{{ pacient.id }}" style="width: 300px; height: 300px;">
+    <label for="id_fisier">Fișier:</label>
+    <input   type="file" name="fisier" id="id_fisier">
+    <br>
+    <label for="id_descriere">Descriere:</label>
+    <textarea name="descriere" id="id_descriere" rows="3"></textarea>
+    <br>
+    <label for="id_data_incarcare">Data încărcării:</label>
+    <input type="date" name="data_incarcare" id="id_data_incarcare">
+    <br>
+    <label for="id_diagnostic">Diagnostic:</label>
+    <input type="text" name="diagnostic" id="id_diagnostic">
+    <br>
+    <button type="submit">Încarcă fișierul</button>
+
+
+
+</form>
+
+
+</div>
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+    function toggleMenu() {
+    var navLinks = document.querySelector('.nav-links');
+    navLinks.classList.toggle('nav-active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+
+.my-custom-class {
+    border: 5px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    width: 40%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+   {% load static %}
+
+</style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+</head>
+<body>
+<header>
+
+
+    <nav>
+    <a href="/">
+    <a style="font-family: Monospace, sans-serif; font-size: 40px; ">
+         Medica
+    </a>
+</a>
+        <div class="nav-links">
+
+            <ul>
+
+
+                <li>
+                    <a href="/pacienti">Inapoi</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <p></p>
+        <center>
+            <div>
+            {{form_edit_pacienti.as_p}}
+        </div>
+
+  <div class="col">
+
+        <input class="btn btn-primary" type="submit" value="Submit">
+
+
+</form>
+
+</center>
+</body>
+
+</html>
